@@ -1,4 +1,4 @@
-package com.kls.references.sboot.ibge.ipca.insights.api.config;
+package com.kls.references.sboot.ibge.ipca.insights.infrastructure.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

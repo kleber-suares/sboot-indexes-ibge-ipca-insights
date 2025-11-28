@@ -1,4 +1,4 @@
-package com.kls.references.sboot.ibge.ipca.insights.api.infrastructure;
+package com.kls.references.sboot.ibge.ipca.insights.infrastructure.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

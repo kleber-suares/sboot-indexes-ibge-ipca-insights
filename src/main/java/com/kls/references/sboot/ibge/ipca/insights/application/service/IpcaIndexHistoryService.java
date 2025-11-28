@@ -1,6 +1,6 @@
-package com.kls.references.sboot.ibge.ipca.insights.api.service;
+package com.kls.references.sboot.ibge.ipca.insights.application.service;
 
-import com.kls.references.sboot.ibge.ipca.insights.api.infrastructure.IpcaIndexHistoryWebClient;
+import com.kls.references.sboot.ibge.ipca.insights.infrastructure.client.IpcaIndexHistoryWebClient;
 import org.springframework.stereotype.Service;
 
 @Service

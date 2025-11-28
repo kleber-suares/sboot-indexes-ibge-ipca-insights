@@ -1,6 +1,6 @@
 package com.kls.references.sboot.ibge.ipca.insights.api.controller;
 
-import com.kls.references.sboot.ibge.ipca.insights.api.service.IpcaIndexHistoryService;
+import com.kls.references.sboot.ibge.ipca.insights.application.service.IpcaIndexHistoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

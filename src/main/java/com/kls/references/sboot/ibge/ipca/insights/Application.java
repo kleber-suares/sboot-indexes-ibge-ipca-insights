@@ -1,4 +1,4 @@
-package com.kls.references.sboot.ibge.ipca.insights.api;
+package com.kls.references.sboot.ibge.ipca.insights;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
