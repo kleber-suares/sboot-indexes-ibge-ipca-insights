@@ -1,6 +1,6 @@
-package com.kls.references.sboot.ibge.ipca.insights.infrastructure.client;
+package com.kls.references.sboot.ibge.ipca.insights.infrastructure.web;
 
-import com.kls.references.sboot.ibge.ipca.insights.infrastructure.dto.IpcaHistoryExternalResponse;
+import com.kls.references.sboot.ibge.ipca.insights.infrastructure.web.dto.IpcaHistorySidraResponse;
 import com.kls.references.sboot.ibge.ipca.insights.infrastructure.exception.WebClientOperationTimeoutException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,12 +30,12 @@ public class IpcaHistoryWebClient {
         this.ipcaHistoryWebClient = ipcaHistoryWebClient;
     }
 
-    public List<IpcaHistoryExternalResponse> getIpcaHistoryData() {
+    public List<IpcaHistorySidraResponse> getIpcaHistoryData() {
         long maxRetryAttempts = 3;
-        long timeoutSeconds = 10;
+        long timeoutSeconds = 10; //medir via logs reais de latência para fixar valor mais adequado
         long backoffSeconds = 2;
 
-        Mono<List<IpcaHistoryExternalResponse>> monoResponse =
+        Mono<List<IpcaHistorySidraResponse>> monoResponse =
             ipcaHistoryWebClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
@@ -44,7 +44,7 @@ public class IpcaHistoryWebClient {
                 )
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<IpcaHistoryExternalResponse>>() {})
+                .bodyToMono(new ParameterizedTypeReference<List<IpcaHistorySidraResponse>>() {})
                 .timeout(Duration.ofSeconds(timeoutSeconds))
                 .retryWhen(
                     Retry
@@ -52,7 +52,9 @@ public class IpcaHistoryWebClient {
                         .filter(throwable ->
                             throwable instanceof TimeoutException ||
                                 throwable instanceof io.netty.handler.timeout.TimeoutException ||
-                                throwable instanceof WebClientResponseException.InternalServerError
+                                throwable instanceof WebClientResponseException.InternalServerError ||
+                                throwable instanceof WebClientResponseException &&
+                                    ((WebClientResponseException) throwable).getStatusCode().is5xxServerError()
                         )
                         .doBeforeRetry(retrySignal -> {
                             log.warn("Retrying request. Attempt: {}, Failure: {}",
@@ -60,9 +62,9 @@ public class IpcaHistoryWebClient {
                                 retrySignal.failure().getMessage());
                         })
                         .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> {
-                            String erroMsg = String.format("Request aborted after %d failed retry attempts.", maxRetryAttempts);
-                            log.error(erroMsg);
-                            return new WebClientOperationTimeoutException(erroMsg);
+                            String errorMsg = String.format("Request aborted after %d failed retry attempts.", maxRetryAttempts);
+                            log.error(errorMsg);
+                            return new WebClientOperationTimeoutException(errorMsg, retrySignal.failure());
                         })
                 );
 

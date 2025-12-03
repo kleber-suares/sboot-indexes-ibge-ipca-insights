@@ -1,6 +1,18 @@
 spring:
   application:
     name: sboot-ibge-ipca-insights-api
+  main:
+    banner-mode: "off"
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: tesouro_direto_teste_db
+      username: admin
+      password: admin
+      authentication-database: admin
+      uuid-representation: standard
+      auto-index-creation: true
 
 ibge:
   sidra:

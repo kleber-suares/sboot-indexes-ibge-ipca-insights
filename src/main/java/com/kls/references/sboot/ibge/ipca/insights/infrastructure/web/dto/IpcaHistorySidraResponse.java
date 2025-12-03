@@ -1,10 +1,10 @@
-package com.kls.references.sboot.ibge.ipca.insights.infrastructure.dto;
+package com.kls.references.sboot.ibge.ipca.insights.infrastructure.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class IpcaHistoryExternalResponse {
+public class IpcaHistorySidraResponse {
 
     @JsonProperty("NC")
     private String nc;
