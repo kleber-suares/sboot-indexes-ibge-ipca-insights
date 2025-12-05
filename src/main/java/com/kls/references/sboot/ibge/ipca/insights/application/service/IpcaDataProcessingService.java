@@ -1,28 +1,29 @@
 package com.kls.references.sboot.ibge.ipca.insights.application.service;
 
-import com.kls.references.sboot.ibge.ipca.insights.application.service.persistence.IpcaHistoryRepositoryService;
-import com.kls.references.sboot.ibge.ipca.insights.application.service.web.IpcaHistoryWebClientService;
-import com.kls.references.sboot.ibge.ipca.insights.domain.model.IpcaGroupedData;
+import com.kls.references.sboot.ibge.ipca.insights.application.service.persistence.IpcaDataRepositoryService;
+import com.kls.references.sboot.ibge.ipca.insights.application.service.web.IpcaDataWebClientService;
+import com.kls.references.sboot.ibge.ipca.insights.domain.model.IpcaData;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class IpcaDataProcessingService {
 
-    private final IpcaHistoryWebClientService clientService;
-    private final IpcaHistoryRepositoryService repositoryService;
+    private final IpcaDataWebClientService clientService;
+    private final IpcaDataRepositoryService repositoryService;
 
-    public IpcaDataProcessingService(IpcaHistoryWebClientService clientService, IpcaHistoryRepositoryService repositoryService) {
+    public IpcaDataProcessingService(IpcaDataWebClientService clientService, IpcaDataRepositoryService repositoryService) {
         this.clientService = clientService;
         this.repositoryService = repositoryService;
     }
 
-    public IpcaGroupedData fetchIpcaHistoryData() {
-        var ipcaGroupedData = clientService.processIpcaHistoryData();
+    public List<IpcaData> fetchIpcaData() {
+        var ipcaData = clientService.fetchIpcaData();
 
-        repositoryService.importHistoryData(ipcaGroupedData);
-        repositoryService.importInfoData(ipcaGroupedData);
+        repositoryService.importIpcaData(ipcaData);
 
-        return ipcaGroupedData;
+        return ipcaData;
     }
 
 }

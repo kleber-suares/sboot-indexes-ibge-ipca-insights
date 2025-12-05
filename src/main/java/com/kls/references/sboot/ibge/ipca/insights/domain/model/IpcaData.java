@@ -1,9 +1,12 @@
 package com.kls.references.sboot.ibge.ipca.insights.domain.model;
 
+import com.kls.references.sboot.ibge.ipca.insights.domain.enums.IpcaMeasureType;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 
 @Data
-public class IpcaInfoValue {
+public class IpcaData {
 
     private String territorialLevelCode; //NC
     private String territorialLevelName; //NN
@@ -19,4 +22,15 @@ public class IpcaInfoValue {
     private String referencePeriodCode; //D3C
     private String referencePeriodLabel; //D3N
 
+    @Getter(AccessLevel.NONE)
+    public boolean isHistory;
+
+    public boolean isHistory() {
+        if (getUnitOfMeasureCode() == null || getUnitOfMeasureCode().isBlank() ||
+            getUnitOfMeasureLabel() == null || getUnitOfMeasureLabel().isBlank()) {
+            return false;
+        }
+
+        return IpcaMeasureType.isHistory(getUnitOfMeasureCode(), getUnitOfMeasureLabel());
+    }
 }

@@ -1,4 +1,4 @@
-package com.kls.references.sboot.ibge.ipca.insights.api;
+package com.kls.references.sboot.ibge.ipca.insights;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

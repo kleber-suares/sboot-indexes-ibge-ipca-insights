@@ -1,63 +1,75 @@
 package com.kls.references.sboot.ibge.ipca.insights.infrastructure.mapper;
 
-import com.kls.references.sboot.ibge.ipca.insights.domain.model.IpcaHistoryValue;
-import com.kls.references.sboot.ibge.ipca.insights.domain.model.IpcaInfoValue;
+import com.kls.references.sboot.ibge.ipca.insights.domain.model.IpcaData;
+import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.entity.IpcaDataEntity;
 import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.entity.IpcaHistoryDataEntity;
 import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.entity.IpcaInfoDataEntity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class IpcaDataEntityMapper {
 
     private IpcaDataEntityMapper() {}
 
-    public static List<IpcaHistoryDataEntity> toHistoryDataEntity(List<IpcaHistoryValue> domainList) {
-        List<IpcaHistoryDataEntity> entityList = new ArrayList<>();
+    public static List<IpcaHistoryDataEntity> mapHistoryData(List<IpcaData> ipcaDataList) {
+        List<IpcaHistoryDataEntity> list = new ArrayList<>();
 
-        for (IpcaHistoryValue domain : domainList) {
-            IpcaHistoryDataEntity entity = new IpcaHistoryDataEntity();
+        ipcaDataList.forEach(ipcaData ->
+            list.add(
+                mapCommonFields(
+                    ipcaData,
+                    IpcaHistoryDataEntity::new,
+                    (target, src) ->
+                        target.setInflationRate(new BigDecimal(src.getInflationRate().trim())) //TODO: ver se necessario validar notacao cientifica
+                )
+            )
+        );
 
-            entity.setInflationRate(domain.getInflationRate());
-            entity.setTerritorialLevelCode(domain.getTerritorialLevelCode());
-            entity.setTerritorialLevelName(domain.getTerritorialLevelName());
-            entity.setUnitOfMeasureCode(domain.getUnitOfMeasureCode());
-            entity.setUnitOfMeasureLabel(domain.getUnitOfMeasureLabel());
-            entity.setRegionCode(domain.getRegionCode());
-            entity.setRegionName(domain.getRegionName());
-            entity.setIndicatorCode(domain.getIndicatorCode());
-            entity.setIndicatorName(domain.getIndicatorName());
-            entity.setReferencePeriodCode(domain.getReferencePeriodCode());
-            entity.setReferencePeriodLabel(domain.getReferencePeriodLabel());
-
-            entityList.add(entity);
-        }
-
-        return entityList;
+        return list;
     }
 
-    public static List<IpcaInfoDataEntity> toInfoDataEntity(List<IpcaInfoValue> domainList) {
-        List<IpcaInfoDataEntity> entityList = new ArrayList<>();
+    public static List<IpcaInfoDataEntity> mapInfoData(List<IpcaData> ipcaDataList) {
+        List<IpcaInfoDataEntity> list = new ArrayList<>();
 
-        for (IpcaInfoValue domain : domainList) {
-            IpcaInfoDataEntity entity = new IpcaInfoDataEntity();
+        ipcaDataList.forEach(ipcaData ->
+            list.add(
+                mapCommonFields(
+                    ipcaData,
+                    IpcaInfoDataEntity::new,
+                    (target, src) ->
+                    target.setInflationRate(src.getInflationRate())
+                )
+            )
+        );
 
-            entity.setInflationRate(domain.getInflationRate());
-            entity.setTerritorialLevelCode(domain.getTerritorialLevelCode());
-            entity.setTerritorialLevelName(domain.getTerritorialLevelName());
-            entity.setUnitOfMeasureCode(domain.getUnitOfMeasureCode());
-            entity.setUnitOfMeasureLabel(domain.getUnitOfMeasureLabel());
-            entity.setRegionCode(domain.getRegionCode());
-            entity.setRegionName(domain.getRegionName());
-            entity.setIndicatorCode(domain.getIndicatorCode());
-            entity.setIndicatorName(domain.getIndicatorName());
-            entity.setReferencePeriodCode(domain.getReferencePeriodCode());
-            entity.setReferencePeriodLabel(domain.getReferencePeriodLabel());
+        return list;
+    }
 
-            entityList.add(entity);
-        }
+    private static <T extends IpcaDataEntity> T mapCommonFields(
+        IpcaData src,
+        Supplier<T> factory,
+        BiConsumer<T, IpcaData> inflationSetter
+    ) {
+        T target = factory.get();
 
-        return entityList;
+        target.setTerritorialLevelCode(src.getTerritorialLevelCode());
+        target.setTerritorialLevelName(src.getTerritorialLevelName());
+        target.setUnitOfMeasureCode(src.getUnitOfMeasureCode());
+        target.setUnitOfMeasureLabel(src.getUnitOfMeasureLabel());
+        target.setRegionCode(src.getRegionCode());
+        target.setRegionName(src.getRegionName());
+        target.setIndicatorCode(src.getIndicatorCode());
+        target.setIndicatorName(src.getIndicatorName());
+        target.setReferencePeriodCode(src.getReferencePeriodCode());
+        target.setReferencePeriodLabel(src.getReferencePeriodLabel());
+
+        inflationSetter.accept(target, src);
+
+        return target;
     }
 
 }
