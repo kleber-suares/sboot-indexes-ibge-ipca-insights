@@ -3,7 +3,7 @@ package com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.r
 import com.kls.references.sboot.ibge.ipca.insights.domain.model.IpcaData;
 import com.kls.references.sboot.ibge.ipca.insights.infrastructure.exception.ImportOperationException;
 import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.repository.bulk.IpcaHistoryDataBulkOpsImpl;
-import com.kls.references.sboot.ibge.ipca.insights.stubs.IpcaDataStub;
+import com.kls.references.sboot.ibge.ipca.insights.domain.stubs.IpcaDataStub;
 import com.mongodb.bulk.BulkWriteResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,13 +23,13 @@ class IpcaDataImportImplTest {
     private IpcaHistoryDataBulkOpsImpl bulkOpsImpl;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         bulkOpsImpl = Mockito.mock(IpcaHistoryDataBulkOpsImpl.class);
         ipcaImportImpl = new IpcaDataImportImpl(bulkOpsImpl);
     }
 
     @Test
-    void importIpcaHistoryData_Success() {
+    void shouldImportIpcaHistoryDataSuccessfully() {
         BulkWriteResult bulkWriteResultMock = Mockito.mock(BulkWriteResult.class);
         List<IpcaData> ipcaHistoryDataList = IpcaDataStub.getIpcaHistoryDataList();
 
@@ -42,7 +42,7 @@ class IpcaDataImportImplTest {
     }
 
     @Test
-    void importIpcaInfoData_Success() {
+    void shouldImportIpcaInfoDataSuccessfully() {
         BulkWriteResult bulkWriteResultMock = Mockito.mock(BulkWriteResult.class);
         List<IpcaData> ipcaInfoDataList = IpcaDataStub.getIpcaInfoDataList();
 
@@ -55,7 +55,7 @@ class IpcaDataImportImplTest {
     }
 
     @Test
-    void importIpcaHistoryData_mustThrowException_onInvalidIpcaHistoryDataObject() {
+    void shouldThrowException_when_importingIpcaHistoryData_if_IpcaDataObjectIsNotHistoryData() {
         BulkWriteResult bulkWriteResultMock = Mockito.mock(BulkWriteResult.class);
         List<IpcaData> ipcaInfoDataList = IpcaDataStub.getIpcaInfoDataList();
 
@@ -71,7 +71,7 @@ class IpcaDataImportImplTest {
     }
 
     @Test
-    void importIpcaHistoryData_mustThrowException_onBulkOpsExcutionError() {
+    void shouldThrowExceptionImport_when_importingIpcaHistoryData_if_anErrorOccursDuringBulkOpsExecution() {
         List<IpcaData> ipcaHistoryDataList = IpcaDataStub.getIpcaHistoryDataList();
         String errorMsg = "Exception Test";
 
@@ -93,7 +93,7 @@ class IpcaDataImportImplTest {
     }
 
     @Test
-    void importIpcaInfoData_mustThrowException_onBulkOpsExcutionError() {
+    void shouldThrowExceptionImport_when_importingIpcaInfoData_if_anErrorOccursDuringBulkOpsExecution() {
         List<IpcaData> ipcaInfoDataList = IpcaDataStub.getIpcaInfoDataList();
         String errorMsg = "Exception Test";
 

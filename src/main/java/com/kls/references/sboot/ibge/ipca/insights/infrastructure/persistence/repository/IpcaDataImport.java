@@ -3,10 +3,11 @@ package com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.r
 import com.kls.references.sboot.ibge.ipca.insights.domain.model.IpcaData;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface IpcaDataImport {
 
-    void importIpcaHistoryData(List<IpcaData> ipcaHistoryValueList);
-    void importIpcaInfoData(List<IpcaData> ipcaInfoValueList);
+    CompletableFuture<Void> importIpcaHistoryData(List<IpcaData> ipcaHistoryValueList);
+    CompletableFuture<Void> importIpcaInfoData(List<IpcaData> ipcaInfoValueList);
 
 }

@@ -7,7 +7,7 @@ spring:
     mongodb:
       host: 127.0.0.1
       port: 27017
-      database: tesouro_direto_teste_db
+      database: ibge_ipca_history_db
       username: admin
       password: admin
       authentication-database: admin

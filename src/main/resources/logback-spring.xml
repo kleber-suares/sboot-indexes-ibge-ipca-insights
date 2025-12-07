@@ -3,25 +3,24 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
             <layout class="ch.qos.logback.classic.PatternLayout">
-                <Pattern>
-                    <!-- %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n -->
-                    %black(%d{ISO8601}) %highlight(%-5level) %yellow( %-60logger{60} %X{uuid} - %msg - [%blue(%thread)] ) %throwable %n
-                </Pattern>
+                <pattern>
+                    %d{ISO8601} [%X{X-Correlation-Id}] %highlight(%-5level) %cyan(%logger) %n \t\t %msg [%blue(%thread)] %n%throwable
+                </pattern>
             </layout>
         </encoder>
     </appender>
 
-<!--    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">-->
-<!--        <appender-ref ref="STDOUT"/>-->
-<!--        <queueSize>500</queueSize>-->
-<!--    </appender>-->
-
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT"/>
+        <queueSize>5000</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+    </appender>
 
     <root level="INFO">
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="ASYNC"/>
     </root>
 
-    <logger name="com.kls.references.sboot.ibge.ipca.insights.api" level="DEBUG" />
-    <logger name="org.springframework" level="ERROR" />
+    <logger name="com.kls.references.sboot.ibge.ipca.insights" level="DEBUG" />
+    <logger name="org.springframework" level="WARN" />
 
 </configuration>

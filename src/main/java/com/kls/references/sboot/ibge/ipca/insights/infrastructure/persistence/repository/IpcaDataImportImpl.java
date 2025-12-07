@@ -9,9 +9,13 @@ import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.re
 import com.kls.references.sboot.ibge.ipca.insights.util.CustomDurationFormatter;
 import com.mongodb.bulk.BulkWriteResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import static com.kls.references.sboot.ibge.ipca.insights.infrastructure.config.AsyncConfig.IPCA_IMPORT_EXECUTOR;
 
 @Component
 @Slf4j
@@ -24,7 +28,8 @@ public class IpcaDataImportImpl implements IpcaDataImport {
     }
 
     @Override
-    public void importIpcaHistoryData(List<IpcaData> ipcaHistoryValueList) {
+    @Async(IPCA_IMPORT_EXECUTOR)
+    public CompletableFuture<Void> importIpcaHistoryData(List<IpcaData> ipcaHistoryValueList) {
         try {
             log.info("Starting import with bulk strategy...");
 
@@ -49,10 +54,13 @@ public class IpcaDataImportImpl implements IpcaDataImport {
             log.error(msg, e);
             throw new ImportOperationException(msg , e);
         }
+
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public void importIpcaInfoData(List<IpcaData> ipcaInfoValueList) {
+    @Async(IPCA_IMPORT_EXECUTOR)
+    public CompletableFuture<Void> importIpcaInfoData(List<IpcaData> ipcaInfoValueList) {
         log.info("Starting import with bulk strategy...");
 
         try {
@@ -77,6 +85,8 @@ public class IpcaDataImportImpl implements IpcaDataImport {
             log.error(msg, e);
             throw new ImportOperationException(msg , e);
         }
+
+        return CompletableFuture.completedFuture(null);
     }
 
 }

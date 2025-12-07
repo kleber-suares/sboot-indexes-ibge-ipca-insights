@@ -1,4 +1,4 @@
-package com.kls.references.sboot.ibge.ipca.insights.stubs;
+package com.kls.references.sboot.ibge.ipca.insights.domain.stubs;
 
 import com.kls.references.sboot.ibge.ipca.insights.domain.model.IpcaData;
 
