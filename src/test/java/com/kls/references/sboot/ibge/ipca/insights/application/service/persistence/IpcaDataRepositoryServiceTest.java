@@ -1,9 +1,11 @@
 package com.kls.references.sboot.ibge.ipca.insights.application.service.persistence;
 
 import com.kls.references.sboot.ibge.ipca.insights.domain.model.IpcaData;
-import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.repository.IpcaDataImport;
+import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.dto.IpcaDataImportLogIds;
+import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.repository.IpcaDataImportExecutor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import org.mockito.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -11,27 +13,47 @@ import static org.mockito.Mockito.*;
 
 class IpcaDataRepositoryServiceTest {
 
-    @Test
-    void shouldExecuteRepositoryCallsInParallel() {
-        IpcaDataImport repository = mock(IpcaDataImport.class);
+    @Mock
+    private IpcaDataImportExecutor importRepository;
 
-        when(repository.importIpcaHistoryData(any()))
-            .thenReturn(CompletableFuture.completedFuture(null));
+    @InjectMocks
+    private IpcaDataRepositoryService service;
 
-        when(repository.importIpcaInfoData(any()))
-            .thenReturn(CompletableFuture.completedFuture(null));
-
-        IpcaDataRepositoryService service = new IpcaDataRepositoryService(repository);
-
-        IpcaData h = mock(IpcaData.class);
-        IpcaData i = mock(IpcaData.class);
-
-        when(h.isHistory()).thenReturn(true);
-        when(i.isHistory()).thenReturn(false);
-
-        service.importIpcaData(List.of(h, i));
-
-        verify(repository, timeout(1500)).importIpcaHistoryData(any());
-        verify(repository, timeout(1500)).importIpcaInfoData(any());
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
     }
+
+    @Test
+    void shouldCallCorrectParallelAsyncMethods() {
+
+        IpcaData historyItem = mock(IpcaData.class);
+        when(historyItem.isHistory()).thenReturn(true);
+
+        IpcaData infoItem = mock(IpcaData.class);
+        when(infoItem.isHistory()).thenReturn(false);
+
+        List<IpcaData> inputList = List.of(historyItem, infoItem);
+
+        IpcaDataImportLogIds logIds =
+            new IpcaDataImportLogIds("history-log", "info-log");
+
+        CompletableFuture<Void> historyFuture = CompletableFuture.completedFuture(null);
+        CompletableFuture<Void> infoFuture = CompletableFuture.completedFuture(null);
+
+        when(importRepository.importIpcaHistoryData(List.of(historyItem), "history-log"))
+            .thenReturn(historyFuture);
+        when(importRepository.importIpcaInfoData(List.of(infoItem), "info-log"))
+            .thenReturn(infoFuture);
+
+        service.importIpcaData(inputList, logIds);
+
+        verify(importRepository)
+            .importIpcaHistoryData(List.of(historyItem), "history-log");
+        verify(importRepository)
+            .importIpcaInfoData(List.of(infoItem), "info-log");
+
+        verifyNoMoreInteractions(importRepository);
+    }
+
 }

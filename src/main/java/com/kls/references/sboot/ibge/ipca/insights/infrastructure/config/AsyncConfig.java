@@ -12,20 +12,20 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class AsyncConfig implements AsyncConfigurer {
 
-    public static final String IPCA_IMPORT_EXECUTOR = "ipcaImportExecutor";
+    public static final String IPCA_DATA_IMPORT_EXECUTOR = "ipcaImportExecutor";
 
     @Override
-    @Bean(name = IPCA_IMPORT_EXECUTOR)
+    @Bean(name = IPCA_DATA_IMPORT_EXECUTOR)
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+
         executor.setCorePoolSize(4);
         executor.setMaxPoolSize(8);
         executor.setQueueCapacity(50);
-
         executor.setTaskDecorator(new MdcTaskDecorator());
-
         executor.setThreadNamePrefix("ipca-import-");
         executor.initialize();
+
         return executor;
     }
 }

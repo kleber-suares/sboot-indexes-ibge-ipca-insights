@@ -1,32 +1,41 @@
 package com.kls.references.sboot.ibge.ipca.insights.api.controller;
 
-import com.kls.references.sboot.ibge.ipca.insights.application.service.IpcaDataProcessingService;
-import com.kls.references.sboot.ibge.ipca.insights.domain.model.IpcaData;
+import com.kls.references.sboot.ibge.ipca.insights.application.service.IpcaAsyncImportOrchestratorService;
+import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.dto.IpcaDataImportLogIds;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/ibge/ipca")
 @Slf4j
 public class IpcaBaseDataController {
 
-    private final IpcaDataProcessingService ipcaDataProcessingService;
+    private final IpcaAsyncImportOrchestratorService asyncImportService;
 
-    public IpcaBaseDataController(IpcaDataProcessingService ipcaDataProcessingService) {
-        this.ipcaDataProcessingService = ipcaDataProcessingService;
+    public IpcaBaseDataController(IpcaAsyncImportOrchestratorService asyncImportService) {
+        this.asyncImportService = asyncImportService;
     }
 
     @PostMapping(value = "/fetch", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<IpcaData>> processIpcaHistoryData() {
-        log.info("Request to start processing IPCA history data received.");
+    public ResponseEntity<IpcaDataImportLogIds> startAsyncImport() {
+        log.info("Request to start processing IPCA data received.");
 
-        return ResponseEntity.ok(ipcaDataProcessingService.fetchIpcaData());
+        IpcaDataImportLogIds logIds = asyncImportService.startAsyncImport();
+
+        return ResponseEntity
+            .accepted()
+            .body(logIds);
+    }
+
+    @GetMapping(value = "/import/{jobId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getImportStatus(@PathVariable String jobId) {
+        return asyncImportService
+            .getImportStatus(jobId)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
 
 }
+

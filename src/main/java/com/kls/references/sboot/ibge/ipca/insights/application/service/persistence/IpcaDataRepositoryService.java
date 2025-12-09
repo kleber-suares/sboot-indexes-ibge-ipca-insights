@@ -1,7 +1,8 @@
 package com.kls.references.sboot.ibge.ipca.insights.application.service.persistence;
 
 import com.kls.references.sboot.ibge.ipca.insights.domain.model.IpcaData;
-import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.repository.IpcaDataImport;
+import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.dto.IpcaDataImportLogIds;
+import com.kls.references.sboot.ibge.ipca.insights.infrastructure.persistence.repository.IpcaDataImportExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +14,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class IpcaDataRepositoryService {
 
-    private final IpcaDataImport repository;
+    private final IpcaDataImportExecutor dataImportExecutor;
 
-    public IpcaDataRepositoryService(IpcaDataImport repository) {
-        this.repository = repository;
+    public IpcaDataRepositoryService(
+        IpcaDataImportExecutor dataImportExecutor
+    ) {
+        this.dataImportExecutor = dataImportExecutor;
     }
 
-    public void importIpcaData(List<IpcaData> ipcaDataList) {
+    public void importIpcaData(List<IpcaData> ipcaDataList, IpcaDataImportLogIds logIds) {
 
         var partition =
             ipcaDataList
@@ -33,12 +36,14 @@ public class IpcaDataRepositoryService {
 
         log.info("Submitting async import tasks: {} history records | {} info records", historyList.size(), infoList.size());
 
-        CompletableFuture<Void> historyFuture = repository.importIpcaHistoryData(historyList);
-        CompletableFuture<Void> infoFuture = repository.importIpcaInfoData(infoList);
+        CompletableFuture<Void> historyDataFuture =
+            dataImportExecutor.importIpcaHistoryData(historyList, logIds.ipcaHistoryDataImportLogId());
+        CompletableFuture<Void> infoDataFuture =
+            dataImportExecutor.importIpcaInfoData(infoList, logIds.ipcaInfoDataImportLogId());
 
-        CompletableFuture.allOf(historyFuture, infoFuture).join();
+        CompletableFuture.allOf(historyDataFuture, infoDataFuture).join();
 
-        log.info("Both imports completed successfully.");
+        log.info("IPCA history data and info data imports completed successfully.");
     }
 
 }

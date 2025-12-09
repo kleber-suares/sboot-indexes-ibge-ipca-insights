@@ -1,5 +1,6 @@
 package com.kls.references.sboot.ibge.ipca.insights.infrastructure.web.filter;
 
+import com.kls.references.sboot.ibge.ipca.insights.application.constants.ContextKeys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletResponse;
@@ -15,7 +16,7 @@ import org.slf4j.MDC;
 
 import java.io.IOException;
 
-import static com.kls.references.sboot.ibge.ipca.insights.infrastructure.web.filter.CorrelationIdFilter.CORRELATION_ID_HEADER;
+import static com.kls.references.sboot.ibge.ipca.insights.infrastructure.web.filter.CorrelationIdFilter.HEADER_CORRELATION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -46,16 +47,16 @@ class CorrelationIdFilterTest {
             ArgumentCaptor<String> keyCaptor = ArgumentCaptor.forClass(String.class);
             ArgumentCaptor<String> valueCaptor = ArgumentCaptor.forClass(String.class);
 
-            when(request.getHeader(CORRELATION_ID_HEADER)).thenReturn(null);
+            when(request.getHeader(HEADER_CORRELATION_ID)).thenReturn(null);
 
             filter.doFilter(request, response, filterChain);
 
             mdcMock.verify(() -> MDC.put(keyCaptor.capture(), valueCaptor.capture()));
 
-            assertThat(keyCaptor.getValue()).isEqualTo(CORRELATION_ID_HEADER);
+            assertThat(keyCaptor.getValue()).isEqualTo(ContextKeys.CORRELATION_ID);
             assertThat(valueCaptor.getValue()).isNotNull().isNotBlank();
 
-            mdcMock.verify(() -> MDC.remove(CORRELATION_ID_HEADER));
+            mdcMock.verify(() -> MDC.remove(ContextKeys.CORRELATION_ID));
         }
     }
 
@@ -65,16 +66,16 @@ class CorrelationIdFilterTest {
             ArgumentCaptor<String> keyCaptor = ArgumentCaptor.forClass(String.class);
             ArgumentCaptor<String> valueCaptor = ArgumentCaptor.forClass(String.class);
 
-            when(request.getHeader(CORRELATION_ID_HEADER)).thenReturn("");
+            when(request.getHeader(HEADER_CORRELATION_ID)).thenReturn("");
 
             filter.doFilter(request, response, filterChain);
 
             mdcMock.verify(() -> MDC.put(keyCaptor.capture(), valueCaptor.capture()));
 
-            assertThat(keyCaptor.getValue()).isEqualTo(CORRELATION_ID_HEADER);
+            assertThat(keyCaptor.getValue()).isEqualTo(ContextKeys.CORRELATION_ID);
             assertThat(valueCaptor.getValue()).isNotNull().isNotBlank();
 
-            mdcMock.verify(() -> MDC.remove(CORRELATION_ID_HEADER));
+            mdcMock.verify(() -> MDC.remove(ContextKeys.CORRELATION_ID));
         }
     }
 
@@ -86,16 +87,16 @@ class CorrelationIdFilterTest {
 
             String testCorrelationId = "Test-Correlation-Id";
 
-            when(request.getHeader(CORRELATION_ID_HEADER)).thenReturn(testCorrelationId);
+            when(request.getHeader(HEADER_CORRELATION_ID)).thenReturn(testCorrelationId);
 
             filter.doFilter(request, response, filterChain);
 
             mdcMock.verify(() -> MDC.put(keyCaptor.capture(), valueCaptor.capture()));
 
-            assertThat(keyCaptor.getValue()).isEqualTo(CORRELATION_ID_HEADER);
+            assertThat(keyCaptor.getValue()).isEqualTo(ContextKeys.CORRELATION_ID);
             assertThat(valueCaptor.getValue()).isEqualTo(testCorrelationId);
 
-            mdcMock.verify(() -> MDC.remove(CORRELATION_ID_HEADER));
+            mdcMock.verify(() -> MDC.remove(ContextKeys.CORRELATION_ID));
         }
     }
 
@@ -105,13 +106,13 @@ class CorrelationIdFilterTest {
 
         String testCorrelationId = "Test-Correlation-Id";
 
-        when(request.getHeader(CORRELATION_ID_HEADER)).thenReturn(testCorrelationId);
+        when(request.getHeader(HEADER_CORRELATION_ID)).thenReturn(testCorrelationId);
 
         FilterChain chain = mock(FilterChain.class);
 
         filter.doFilter(request, mock(ServletResponse.class), chain);
 
-        assertThat(MDC.get(CORRELATION_ID_HEADER)).isNull();
+        assertThat(MDC.get(HEADER_CORRELATION_ID)).isNull();
     }
 
 }
