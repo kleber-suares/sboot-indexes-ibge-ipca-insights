@@ -10,9 +10,9 @@
 	</parent>
 
 	<groupId>com.kls.references</groupId>
-	<artifactId>sboot-ibge-ipca-insights-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>sboot-ibge-ipca-insights-api</name>
+	<artifactId>sboot-indexes-ibge-ipca-insights</artifactId>
+    <name>sboot-indexes-ibge-ipca-insights</name>
+    <version>0.0.1-SNAPSHOT</version>
 	<description>Demo for IBGE IPCA Spring Boot project</description>
 
 	<properties>
