@@ -12,10 +12,13 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleException(Exception e) {
-        String msg = "An error ocurred while processing IPCA history data.";
+        String msg = "An internal error ocurred while processing the request.";
+
         log.error(msg, e);
+
         ApiErrorResponse apiErrorResponse =
-            new ApiErrorResponse("An error ocurred while processing IPCA history data.");
+            new ApiErrorResponse(msg);
+
         return ResponseEntity.internalServerError().body(apiErrorResponse);
     }
 
