@@ -1,6 +1,9 @@
 ### Local config folders/files
 src/main/resources/application-local.yaml
 src/main/resources/logback-spring-local.xml
+alternate-pom.xml
+alternate-mvn-local-install.bat
+alternate-mvn-local-verify.bat
 
 ### Default folder/files ###
 target/
