@@ -1,4 +1,4 @@
-package com.kls.references.indexes.ibge.ipca.insights.domain.stubs;
+package com.kls.references.indexes.ibge.ipca.insights.stubs;
 
 import com.kls.references.indexes.ibge.ipca.insights.domain.model.IpcaData;
 

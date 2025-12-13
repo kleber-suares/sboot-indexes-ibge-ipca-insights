@@ -3,6 +3,12 @@ spring:
     name: sboot-ibge-ipca-insights-api
   main:
     banner-mode: "off"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: default
   data:
     mongodb:
       host: 127.0.0.1
@@ -19,3 +25,9 @@ ibge:
     ipca:
       table1737:
         api: "https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/all/p/all/d/v63 2,v69 2,v2266 13,v2263 2,v2264 2,v2265 2"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test

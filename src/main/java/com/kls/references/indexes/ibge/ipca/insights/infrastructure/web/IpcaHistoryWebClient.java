@@ -1,7 +1,8 @@
 package com.kls.references.indexes.ibge.ipca.insights.infrastructure.web;
 
+import com.kls.references.indexes.ibge.ipca.insights.infrastructure.exception.ExternalApiResponseException;
 import com.kls.references.indexes.ibge.ipca.insights.infrastructure.web.dto.IpcaHistorySidraResponse;
-import com.kls.references.indexes.ibge.ipca.insights.infrastructure.exception.WebClientOperationTimeoutException;
+import com.kls.references.indexes.ibge.ipca.insights.infrastructure.exception.ExternalApiTimeoutException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -24,6 +25,9 @@ import static com.kls.references.indexes.ibge.ipca.insights.infrastructure.confi
 public class IpcaHistoryWebClient {
 
     private final WebClient webClient;
+    static final long MAX_RETRY = 3;
+    static final long TIMEOUT_SECONDS = 10; //TODO: medir via logs reais de latência para fixar valor mais adequado
+    static final long BACKOFF_SECONDS = 2;
 
     public IpcaHistoryWebClient(
         @Qualifier(IBGE_IPCA_HISTORY_WEB_CLIENT) WebClient webClient
@@ -31,10 +35,7 @@ public class IpcaHistoryWebClient {
         this.webClient = webClient;
     }
 
-    public Optional<List<IpcaHistorySidraResponse>> fetchIpcaHistory() {
-        long maxRetryAttempts = 3;
-        long timeoutSeconds = 10; //TODO: medir via logs reais de latência para fixar valor mais adequado
-        long backoffSeconds = 2;
+    public List<IpcaHistorySidraResponse> fetchIpcaHistory() {
 
         Mono<List<IpcaHistorySidraResponse>> monoResponse =
             webClient
@@ -46,10 +47,10 @@ public class IpcaHistoryWebClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<IpcaHistorySidraResponse>>() {})
-                .timeout(Duration.ofSeconds(timeoutSeconds))
+                .timeout(Duration.ofSeconds(TIMEOUT_SECONDS))
                 .retryWhen(
                     Retry
-                        .backoff(maxRetryAttempts, Duration.ofSeconds(backoffSeconds))
+                        .backoff(MAX_RETRY, Duration.ofSeconds(BACKOFF_SECONDS))
                         .filter(throwable ->
                             throwable instanceof TimeoutException ||
                                 throwable instanceof io.netty.handler.timeout.TimeoutException ||
@@ -63,13 +64,27 @@ public class IpcaHistoryWebClient {
                                 retrySignal.failure().getMessage())
                         )
                         .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> {
-                            String errorMsg = String.format("Request aborted after %d failed retry attempts.", maxRetryAttempts);
+                            String errorMsg = String.format("Request aborted after %d failed retry attempts.", MAX_RETRY);
                             log.error(errorMsg);
-                            return new WebClientOperationTimeoutException(errorMsg, retrySignal.failure());
+                            return new ExternalApiTimeoutException(errorMsg, retrySignal.failure());
                         })
                 );
 
-        return monoResponse.blockOptional();
+        return validateOptionalResponse(monoResponse.blockOptional());
+    }
+
+
+    private List<IpcaHistorySidraResponse> validateOptionalResponse(
+        Optional<List<IpcaHistorySidraResponse>> optionalResponse
+    ) {
+
+        return optionalResponse.orElseThrow(
+            () -> {
+                String errorMsg = "No response returned from the external service.";
+                log.error(errorMsg);
+                throw new ExternalApiResponseException(errorMsg);
+            }
+        );
     }
 
 }

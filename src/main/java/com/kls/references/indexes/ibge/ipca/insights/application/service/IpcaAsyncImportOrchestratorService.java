@@ -88,7 +88,8 @@ public class IpcaAsyncImportOrchestratorService {
                 importLogRepositoryService.updateProcessEndWithStatusCompleted(historyLogEntry.getId());
                 importLogRepositoryService.updateProcessEndWithStatusCompleted(infoLogEntry.getId());
 
-                log.info("Job finished successfully. historyLog={} | infoLog={}", historyLogEntry.getId(), infoLogEntry.getId());
+                log.info("Job finished successfully. [History Import Log={}] | [Info Import Log={}]",
+                    historyLogEntry.getId(), infoLogEntry.getId());
 
             } catch (Exception ex) {
                 //-----------------------------

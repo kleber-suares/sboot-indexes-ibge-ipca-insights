@@ -3,7 +3,7 @@ package com.kls.references.indexes.ibge.ipca.insights.infrastructure.persistence
 import com.kls.references.indexes.ibge.ipca.insights.application.service.persistence.ImportLogRepositoryService;
 import com.kls.references.indexes.ibge.ipca.insights.domain.model.IpcaData;
 import com.kls.references.indexes.ibge.ipca.insights.infrastructure.persistence.repository.bulk.IpcaHistoryDataBulkOpsImpl;
-import com.kls.references.indexes.ibge.ipca.insights.domain.stubs.IpcaDataStub;
+import com.kls.references.indexes.ibge.ipca.insights.stubs.IpcaDataStub;
 import com.mongodb.bulk.BulkWriteResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
