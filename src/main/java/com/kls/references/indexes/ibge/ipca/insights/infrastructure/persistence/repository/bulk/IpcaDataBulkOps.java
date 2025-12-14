@@ -4,7 +4,7 @@ import com.mongodb.bulk.BulkWriteResult;
 
 import java.util.List;
 
-public interface IpcaHistoryDataBulkOps<T> {
+public interface IpcaDataBulkOps<T> {
 
     BulkWriteResult replaceAll(List<T> newDocuments, Class<T> entityClass);
 

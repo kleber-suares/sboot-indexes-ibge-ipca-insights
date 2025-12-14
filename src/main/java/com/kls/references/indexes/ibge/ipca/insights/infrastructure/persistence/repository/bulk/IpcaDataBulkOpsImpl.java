@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class IpcaHistoryDataBulkOpsImpl implements IpcaHistoryDataBulkOps {
+public class IpcaDataBulkOpsImpl implements IpcaDataBulkOps {
 
     private final MongoTemplate mongoTemplate;
 
-    public IpcaHistoryDataBulkOpsImpl(MongoTemplate mongoTemplate) {
+    public IpcaDataBulkOpsImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 

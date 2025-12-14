@@ -18,12 +18,12 @@ class IpcaHistoryDataBulkOpsImplTest {
 
     private MongoTemplate mongoTemplateMock;
 
-    private IpcaHistoryDataBulkOpsImpl bulkOps;
+    private IpcaDataBulkOpsImpl bulkOps;
 
     @BeforeEach
     void setUp() {
         mongoTemplateMock = Mockito.mock(MongoTemplate.class);
-        bulkOps = new IpcaHistoryDataBulkOpsImpl(mongoTemplateMock);
+        bulkOps = new IpcaDataBulkOpsImpl(mongoTemplateMock);
     }
 
     @Test

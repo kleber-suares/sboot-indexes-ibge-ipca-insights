@@ -57,7 +57,7 @@ class IpcaHistoryWebClientWithMockWebServerTest{
         List<IpcaHistorySidraResponse> resultList = ipcaHistoryWebClient.fetchIpcaHistory();
 
         assertThat(mockWebServer.getRequestCount()).isEqualTo(1);
-        assertThat(resultList.size()).isEqualTo(2);
+        assertThat(resultList).hasSize(2);
     }
 
 
@@ -81,7 +81,7 @@ class IpcaHistoryWebClientWithMockWebServerTest{
         List<IpcaHistorySidraResponse> resultList = ipcaHistoryWebClient.fetchIpcaHistory();
 
         assertThat(mockWebServer.getRequestCount()).isEqualTo(2);
-        assertThat(resultList.size()).isEqualTo(2);
+        assertThat(resultList).hasSize(2);
     }
 
 
@@ -108,7 +108,7 @@ class IpcaHistoryWebClientWithMockWebServerTest{
         List<IpcaHistorySidraResponse> resultList = ipcaHistoryWebClient.fetchIpcaHistory();
 
         assertThat(mockWebServer.getRequestCount()).isEqualTo(3);
-        assertThat(resultList.size()).isEqualTo(2);
+        assertThat(resultList).hasSize(2);
     }
 
 
@@ -135,7 +135,7 @@ class IpcaHistoryWebClientWithMockWebServerTest{
         List<IpcaHistorySidraResponse> resultList = ipcaHistoryWebClient.fetchIpcaHistory();
 
         assertThat(mockWebServer.getRequestCount()).isEqualTo(3);
-        assertThat(resultList.size()).isEqualTo(2);
+        assertThat(resultList).hasSize(2);
     }
 
 

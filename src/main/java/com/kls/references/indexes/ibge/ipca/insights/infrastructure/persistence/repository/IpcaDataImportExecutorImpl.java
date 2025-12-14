@@ -7,7 +7,7 @@ import com.kls.references.indexes.ibge.ipca.insights.infrastructure.persistence.
 import com.kls.references.indexes.ibge.ipca.insights.infrastructure.persistence.entity.IpcaHistoryDataEntity;
 import com.kls.references.indexes.ibge.ipca.insights.infrastructure.persistence.entity.IpcaInfoDataEntity;
 import com.kls.references.indexes.ibge.ipca.insights.infrastructure.persistence.enums.ImportStage;
-import com.kls.references.indexes.ibge.ipca.insights.infrastructure.persistence.repository.bulk.IpcaHistoryDataBulkOpsImpl;
+import com.kls.references.indexes.ibge.ipca.insights.infrastructure.persistence.repository.bulk.IpcaDataBulkOpsImpl;
 import com.kls.references.indexes.ibge.ipca.insights.util.CustomDurationFormatter;
 import com.mongodb.bulk.BulkWriteResult;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +23,11 @@ import static com.kls.references.indexes.ibge.ipca.insights.infrastructure.confi
 @Slf4j
 public class IpcaDataImportExecutorImpl implements IpcaDataImportExecutor {
     
-    private final IpcaHistoryDataBulkOpsImpl bulkOpsImpl;
+    private final IpcaDataBulkOpsImpl bulkOpsImpl;
     private final ImportLogRepositoryService importLogRepositoryService;
 
     public IpcaDataImportExecutorImpl(
-        IpcaHistoryDataBulkOpsImpl bulkOpsImpl,
+        IpcaDataBulkOpsImpl bulkOpsImpl,
         ImportLogRepositoryService importLogRepositoryService
     ) {
         this.bulkOpsImpl = bulkOpsImpl;
