@@ -81,16 +81,14 @@ class IpcaDataImportExecutorImplTest {
         List<IpcaData> ipcaHistoryDataList = IpcaDataStub.getIpcaHistoryDataList();
         String errorMsg = "Exception Test";
         String logId = "abc-123";
-        RuntimeException expectedException = new RuntimeException(errorMsg);
 
         when(bulkOpsImpl.replaceAll(anyList(), any(Class.class)))
             .thenThrow(new RuntimeException(errorMsg));
 
-        Exception e =
-            assertThrows(
-                expectedException.getClass(),
-                () -> ipcaImportImpl.importIpcaHistoryData(ipcaHistoryDataList, logId)
-            );
+        assertThrows(
+            RuntimeException.class,
+            () -> ipcaImportImpl.importIpcaHistoryData(ipcaHistoryDataList, logId)
+        );
 
         verify(bulkOpsImpl).replaceAll(anyList(), any(Class.class));
         verify(logRepositoryService).updateProcessEndWithStatusFailed(eq(logId), anyString());
@@ -101,16 +99,14 @@ class IpcaDataImportExecutorImplTest {
         List<IpcaData> ipcaInfoDataList = IpcaDataStub.getIpcaInfoDataList();
         String errorMsg = "Exception Test";
         String logId = "abc-123";
-        RuntimeException expectedException = new RuntimeException(errorMsg);
 
         when(bulkOpsImpl.replaceAll(anyList(), any(Class.class)))
-            .thenThrow(expectedException);
+            .thenThrow(new RuntimeException(errorMsg));
 
-        Exception e =
-            assertThrows(
-                expectedException.getClass(),
-                () -> ipcaImportImpl.importIpcaInfoData(ipcaInfoDataList, logId)
-            );
+        assertThrows(
+            RuntimeException.class,
+            () -> ipcaImportImpl.importIpcaInfoData(ipcaInfoDataList, logId)
+        );
 
         verify(bulkOpsImpl).replaceAll(anyList(), any(Class.class));
         verify(logRepositoryService).updateProcessEndWithStatusFailed(eq(logId), anyString());

@@ -39,9 +39,9 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
         builder
             .credential(credential)
-            .applyToClusterSettings(settings -> {
-                settings.hosts(Collections.singletonList(new ServerAddress(host, port)));
-            });
+            .applyToClusterSettings(settings ->
+                settings.hosts(Collections.singletonList(new ServerAddress(host, port)))
+            );
     }
 
     @Override

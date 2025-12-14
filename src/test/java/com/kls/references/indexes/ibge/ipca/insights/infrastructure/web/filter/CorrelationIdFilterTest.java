@@ -102,8 +102,6 @@ class CorrelationIdFilterTest {
 
     @Test
     void shouldClearMdcAfterFilterExecution() throws IOException, ServletException {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-
         String testCorrelationId = "Test-Correlation-Id";
 
         when(request.getHeader(HEADER_CORRELATION_ID)).thenReturn(testCorrelationId);

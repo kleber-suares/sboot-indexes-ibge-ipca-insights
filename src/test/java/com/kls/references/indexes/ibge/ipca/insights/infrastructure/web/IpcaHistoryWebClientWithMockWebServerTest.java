@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class IpcaHistoryWebClientTestWithMockWebServer {
+class IpcaHistoryWebClientWithMockWebServerTest{
 
     private static MockWebServer mockWebServer;
     private IpcaHistoryWebClient ipcaHistoryWebClient;

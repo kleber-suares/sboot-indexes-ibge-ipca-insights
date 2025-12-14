@@ -23,9 +23,9 @@ public class IpcaData {
     private String referencePeriodLabel; //D3N
 
     @Getter(AccessLevel.NONE)
-    public boolean isHistory;
+    public boolean isDataHistory;
 
-    public boolean isHistory() {
+    public boolean isDataHistory() {
         if (getUnitOfMeasureCode() == null || getUnitOfMeasureCode().isBlank() ||
             getUnitOfMeasureLabel() == null || getUnitOfMeasureLabel().isBlank()) {
             return false;

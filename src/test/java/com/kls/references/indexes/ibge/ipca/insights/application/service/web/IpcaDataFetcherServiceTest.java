@@ -32,7 +32,7 @@ class IpcaDataFetcherServiceTest {
 
         verify(client).fetchIpcaHistory();
 
-        assertThat(ipcaList.size()).isEqualTo(sidraResponseList.size());
+        assertThat(ipcaList).hasSameSizeAs(sidraResponseList);
     }
 
 }

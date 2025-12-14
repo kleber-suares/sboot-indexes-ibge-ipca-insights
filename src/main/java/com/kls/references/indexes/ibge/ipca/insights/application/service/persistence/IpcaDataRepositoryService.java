@@ -28,7 +28,7 @@ public class IpcaDataRepositoryService {
             ipcaDataList
                 .stream()
                 .collect(Collectors
-                    .partitioningBy(IpcaData::isHistory)
+                    .partitioningBy(IpcaData::isDataHistory)
                 );
 
         var historyList = partition.get(true);

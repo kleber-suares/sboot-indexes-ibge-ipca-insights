@@ -28,10 +28,10 @@ class IpcaDataRepositoryServiceTest {
     void shouldCallCorrectParallelAsyncMethods() {
 
         IpcaData historyItem = mock(IpcaData.class);
-        when(historyItem.isHistory()).thenReturn(true);
+        when(historyItem.isDataHistory()).thenReturn(true);
 
         IpcaData infoItem = mock(IpcaData.class);
-        when(infoItem.isHistory()).thenReturn(false);
+        when(infoItem.isDataHistory()).thenReturn(false);
 
         List<IpcaData> inputList = List.of(historyItem, infoItem);
 

@@ -139,14 +139,6 @@ public class ImportLogEntity {
 
     /* *** Others *** */
 
-    private Long calculateDuration() {
-        if (startDateTime == null && endDateTime == null) {
-            return null;
-        }
-
-        return Duration.between(startDateTime, endDateTime).toMillis();
-    }
-
     private void setDurationFields() {
         if (startDateTime == null && endDateTime == null) {
             this.durationText = "Start and end time not set";

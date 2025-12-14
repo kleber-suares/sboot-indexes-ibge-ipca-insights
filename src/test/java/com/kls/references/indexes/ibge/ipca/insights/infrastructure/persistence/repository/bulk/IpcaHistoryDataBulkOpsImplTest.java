@@ -14,20 +14,20 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
 
-public class IpcaHistoryDataBulkOpsImplTest {
+class IpcaHistoryDataBulkOpsImplTest {
 
     private MongoTemplate mongoTemplateMock;
 
     private IpcaHistoryDataBulkOpsImpl bulkOps;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mongoTemplateMock = Mockito.mock(MongoTemplate.class);
         bulkOps = new IpcaHistoryDataBulkOpsImpl(mongoTemplateMock);
     }
 
     @Test
-    public void shouldReplaceAllDocumentsSuccessfully() {
+    void shouldReplaceAllDocumentsSuccessfully() {
 
         BulkOperations bulkOperationsMock = mock(BulkOperations.class);
 
@@ -49,7 +49,7 @@ public class IpcaHistoryDataBulkOpsImplTest {
         assertThat(removeQueryCaptor.getValue()).isNotNull();
 
         verify(bulkOperationsMock).insert(insertCaptor.capture());
-        assertThat(personsToInsertList.size()).isEqualTo(insertCaptor.getValue().size());
+        assertThat(personsToInsertList).hasSameSizeAs(insertCaptor.getValue());
         assertThat(insertCaptor.getValue()).containsAll(personsToInsertList);
 
         verify(bulkOperationsMock, times(1)).execute();

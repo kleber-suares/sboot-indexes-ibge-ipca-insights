@@ -26,15 +26,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Import(IpcaHistoryWebClientTestConfig.class)
 @ActiveProfiles("test")
-class IpcaHistoryWebClientTestWithWireMock {
+class IpcaHistoryWebClientWithWireMockTest {
 
-    private final WebClient webClient;
     private IpcaHistoryWebClient ipcaHistoryWebClient;
 
-    IpcaHistoryWebClientTestWithWireMock(
+    IpcaHistoryWebClientWithWireMockTest(
         @Qualifier(TEST_WEB_CLIENT) WebClient webClient
     ) {
-        this.webClient = webClient;
         ipcaHistoryWebClient = new IpcaHistoryWebClient(webClient);
     }
 
@@ -42,7 +40,6 @@ class IpcaHistoryWebClientTestWithWireMock {
 
     @BeforeAll
     static void startServer() {
-
         wireMockServer = new WireMockServer(9999);
         wireMockServer.start();
         configureFor("localhost", 9999);
