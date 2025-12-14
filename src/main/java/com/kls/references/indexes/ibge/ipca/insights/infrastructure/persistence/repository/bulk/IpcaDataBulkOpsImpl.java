@@ -1,5 +1,6 @@
 package com.kls.references.indexes.ibge.ipca.insights.infrastructure.persistence.repository.bulk;
 
+import com.kls.references.indexes.ibge.ipca.insights.infrastructure.persistence.entity.IpcaDataEntity;
 import com.mongodb.bulk.BulkWriteResult;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class IpcaDataBulkOpsImpl implements IpcaDataBulkOps {
+public class IpcaDataBulkOpsImpl<T extends IpcaDataEntity> implements IpcaDataBulkOps<T> {
 
     private final MongoTemplate mongoTemplate;
 
@@ -18,7 +19,7 @@ public class IpcaDataBulkOpsImpl implements IpcaDataBulkOps {
     }
 
     @Override
-    public BulkWriteResult replaceAll(List newDocuments, Class entityClass) {
+    public BulkWriteResult replaceAll(List<T> newDocuments, Class<T> entityClass) {
         BulkOperations bulkOps =
             mongoTemplate.bulkOps(
                 BulkOperations.BulkMode.ORDERED,
