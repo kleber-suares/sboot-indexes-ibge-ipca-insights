@@ -39,7 +39,7 @@ public class ImportLogRepositoryService {
         ImportLogEntity savedLog = importLogRepository.save(importLog);
 
         log.debug("Process {} (ID:{}) start log information has been saved to the database.",
-            savedLog.getOperationLabel(), savedLog.getId());
+            savedLog.getOperationType(), savedLog.getId());
 
         return importLogRepository.save(importLog);
     }
@@ -53,7 +53,7 @@ public class ImportLogRepositoryService {
                 importLogRepository.save(importLog);
 
                 log.debug("Process {} (ID:{}) execution log information has been updated to the database.",
-                    importLog.getOperationLabel(), importLog.getId());
+                    importLog.getOperationType(), importLog.getId());
             });
     }
 
@@ -66,7 +66,7 @@ public class ImportLogRepositoryService {
                 importLogRepository.save(importLog);
 
                 log.info("Process {} (ID:{}) end log information has been saved to the database with status COMPLETED.",
-                    importLog.getOperationLabel(), importLog.getId());
+                    importLog.getOperationType(), importLog.getId());
             });
     }
 
@@ -82,7 +82,7 @@ public class ImportLogRepositoryService {
                 importLogRepository.save(importLog);
 
                 log.info("Process {} (ID:{}) end log information has been saved to the database with status COMPLETED.",
-                    importLog.getOperationLabel(), importLog.getId());
+                    importLog.getOperationType(), importLog.getId());
             });
     }
 

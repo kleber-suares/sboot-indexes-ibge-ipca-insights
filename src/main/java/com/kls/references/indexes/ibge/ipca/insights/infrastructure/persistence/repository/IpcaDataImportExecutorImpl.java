@@ -23,14 +23,17 @@ import static com.kls.references.indexes.ibge.ipca.insights.infrastructure.confi
 @Slf4j
 public class IpcaDataImportExecutorImpl implements IpcaDataImportExecutor {
     
-    private final IpcaDataBulkOpsImpl bulkOpsImpl;
+    private final IpcaDataBulkOpsImpl<IpcaHistoryDataEntity> historyBulkOps;
+    private final IpcaDataBulkOpsImpl<IpcaInfoDataEntity> infoBulkOps;
     private final ImportLogRepositoryService importLogRepositoryService;
 
     public IpcaDataImportExecutorImpl(
-        IpcaDataBulkOpsImpl bulkOpsImpl,
+        IpcaDataBulkOpsImpl<IpcaHistoryDataEntity> historyBulkOps,
+        IpcaDataBulkOpsImpl<IpcaInfoDataEntity> infoBulkOps,
         ImportLogRepositoryService importLogRepositoryService
     ) {
-        this.bulkOpsImpl = bulkOpsImpl;
+        this.historyBulkOps = historyBulkOps;
+        this.infoBulkOps = infoBulkOps;
         this.importLogRepositoryService = importLogRepositoryService;
     }
 
@@ -48,7 +51,7 @@ public class IpcaDataImportExecutorImpl implements IpcaDataImportExecutor {
             var historyDataEntityList = IpcaDataEntityMapper.mapHistoryData(ipcaHistoryValueList);
             log.info("Number of IPCA history data items mapped to persist: {}", historyDataEntityList.size());
 
-            BulkWriteResult bulkWriteResult = bulkOpsImpl.replaceAll(historyDataEntityList, IpcaHistoryDataEntity.class);
+            BulkWriteResult bulkWriteResult = historyBulkOps.replaceAll(historyDataEntityList, IpcaHistoryDataEntity.class);
 
             String duration = CustomDurationFormatter.formatFrom(System.currentTimeMillis() - startTime);
 
@@ -87,7 +90,7 @@ public class IpcaDataImportExecutorImpl implements IpcaDataImportExecutor {
             var infoDataEntityList = IpcaDataEntityMapper.mapInfoData(ipcaInfoValueList);
             log.info("Number of IPCA info data items mapped to persist: {}", infoDataEntityList.size());
 
-            BulkWriteResult bulkWriteResult = bulkOpsImpl.replaceAll(infoDataEntityList, IpcaInfoDataEntity.class);
+            BulkWriteResult bulkWriteResult = infoBulkOps.replaceAll(infoDataEntityList, IpcaInfoDataEntity.class);
 
             String duration = CustomDurationFormatter.formatFrom(System.currentTimeMillis() - startTime);
 

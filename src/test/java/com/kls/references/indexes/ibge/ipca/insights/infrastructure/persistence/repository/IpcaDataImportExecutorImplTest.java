@@ -18,16 +18,18 @@ import static org.mockito.Mockito.*;
 
 class IpcaDataImportExecutorImplTest {
 
-    private IpcaDataBulkOpsImpl bulkOpsImpl;
+    private IpcaDataBulkOpsImpl historyBulkOps;
+    private IpcaDataBulkOpsImpl infoBulkOps;
     private IpcaDataImportExecutorImpl ipcaImportImpl;
     private ImportLogRepositoryService logRepositoryService;
 
 
     @BeforeEach
     void setUp() {
-        bulkOpsImpl = Mockito.mock(IpcaDataBulkOpsImpl.class);
+        historyBulkOps = Mockito.mock(IpcaDataBulkOpsImpl.class);
+        infoBulkOps = Mockito.mock(IpcaDataBulkOpsImpl.class);
         logRepositoryService = Mockito.mock(ImportLogRepositoryService.class);
-        ipcaImportImpl = new IpcaDataImportExecutorImpl(bulkOpsImpl, logRepositoryService);
+        ipcaImportImpl = new IpcaDataImportExecutorImpl(historyBulkOps, infoBulkOps, logRepositoryService);
     }
 
     @Test
@@ -36,12 +38,12 @@ class IpcaDataImportExecutorImplTest {
         List<IpcaData> ipcaHistoryDataList = IpcaDataStub.getIpcaHistoryDataList();
         String logId = "abc-123";
 
-        when(bulkOpsImpl.replaceAll(anyList(), any(Class.class)))
+        when(historyBulkOps.replaceAll(anyList(), any(Class.class)))
             .thenReturn(bulkWriteResultMock);
 
         ipcaImportImpl.importIpcaHistoryData(ipcaHistoryDataList, logId);
 
-        verify(bulkOpsImpl, times(1)).replaceAll(anyList(), any(Class.class));
+        verify(historyBulkOps, times(1)).replaceAll(anyList(), any(Class.class));
     }
 
     @Test
@@ -50,12 +52,12 @@ class IpcaDataImportExecutorImplTest {
         List<IpcaData> ipcaInfoDataList = IpcaDataStub.getIpcaInfoDataList();
         String logId = "abc-123";
 
-        when(bulkOpsImpl.replaceAll(anyList(), any(Class.class)))
+        when(infoBulkOps.replaceAll(anyList(), any(Class.class)))
             .thenReturn(bulkWriteResultMock);
 
         ipcaImportImpl.importIpcaInfoData(ipcaInfoDataList, logId);
 
-        verify(bulkOpsImpl, times(1)).replaceAll(anyList(), any(Class.class));
+        verify(infoBulkOps, times(1)).replaceAll(anyList(), any(Class.class));
     }
 
     @Test
@@ -64,7 +66,7 @@ class IpcaDataImportExecutorImplTest {
         List<IpcaData> ipcaInfoDataList = IpcaDataStub.getIpcaInfoDataList();
         String logId = "abc-123";
 
-        when(bulkOpsImpl.replaceAll(anyList(), any(Class.class)))
+        when(historyBulkOps.replaceAll(anyList(), any(Class.class)))
             .thenReturn(bulkWriteResultMock);
 
         assertThrows(
@@ -72,7 +74,7 @@ class IpcaDataImportExecutorImplTest {
             () -> ipcaImportImpl.importIpcaHistoryData(ipcaInfoDataList, logId)
         );
 
-        verify(bulkOpsImpl, times(0)).replaceAll(anyList(), any(Class.class));
+        verify(historyBulkOps, times(0)).replaceAll(anyList(), any(Class.class));
         verify(logRepositoryService).updateProcessEndWithStatusFailed(eq(logId), anyString());
     }
 
@@ -82,7 +84,7 @@ class IpcaDataImportExecutorImplTest {
         String errorMsg = "Exception Test";
         String logId = "abc-123";
 
-        when(bulkOpsImpl.replaceAll(anyList(), any(Class.class)))
+        when(historyBulkOps.replaceAll(anyList(), any(Class.class)))
             .thenThrow(new RuntimeException(errorMsg));
 
         assertThrows(
@@ -90,7 +92,7 @@ class IpcaDataImportExecutorImplTest {
             () -> ipcaImportImpl.importIpcaHistoryData(ipcaHistoryDataList, logId)
         );
 
-        verify(bulkOpsImpl).replaceAll(anyList(), any(Class.class));
+        verify(historyBulkOps).replaceAll(anyList(), any(Class.class));
         verify(logRepositoryService).updateProcessEndWithStatusFailed(eq(logId), anyString());
     }
 
@@ -100,7 +102,7 @@ class IpcaDataImportExecutorImplTest {
         String errorMsg = "Exception Test";
         String logId = "abc-123";
 
-        when(bulkOpsImpl.replaceAll(anyList(), any(Class.class)))
+        when(infoBulkOps.replaceAll(anyList(), any(Class.class)))
             .thenThrow(new RuntimeException(errorMsg));
 
         assertThrows(
@@ -108,7 +110,7 @@ class IpcaDataImportExecutorImplTest {
             () -> ipcaImportImpl.importIpcaInfoData(ipcaInfoDataList, logId)
         );
 
-        verify(bulkOpsImpl).replaceAll(anyList(), any(Class.class));
+        verify(infoBulkOps).replaceAll(anyList(), any(Class.class));
         verify(logRepositoryService).updateProcessEndWithStatusFailed(eq(logId), anyString());
     }
 

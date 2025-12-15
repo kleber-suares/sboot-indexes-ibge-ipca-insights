@@ -54,7 +54,7 @@ public class ImportLogEntity {
         return id;
     }
 
-    public OperationType getOperationLabel() {
+    public OperationType getOperationType() {
         return operationType;
     }
 
