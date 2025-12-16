@@ -125,11 +125,62 @@ The project adopts a layered testing strategy:
     - retry flows across multiple requests
 
 ---
-## 📄 License
+## ⚖️ License
 
 This project is licensed under the MIT License.
 You are free to use, modify, and distribute this software, provided that the original copyright notice is included.
 
 For more information, refer to the [LICENSE](LICENSE) file.
 
+---
+## 🔧 MongoDB configuration
 
+_Obs: Requires Docker to be installed beforehand._
+
+1 - Download the MongoDB Docker image:
+``` console
+docker pull mongo:8.0
+```
+
+2 - Create and start a container from the pulled image:
+``` console
+docker run -d --name mongodb-finance-and-economics -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin mongo:8.0
+```
+
+_* The command above assigns a name to the container, 
+maps the local host port **27017** to port **27017** of the container,
+defines environment variables used by MongoDB to create a root user named **admin**, and sets the root user's password._ 
+
+3 - ***(Optional)*** MongoDB connection settings are already configured in the application via `application.yaml`. 
+
+Use the URI below only if you want to inspect or manage the data using an external client such as **MongoDB Compass**.:
+``` console
+mongodb://admin:admin@localhost:27017/
+``` 
+---
+## 📥 Endpoints of the application (assuming a local execution)
+
+#### - Fetch IPCA data from the SIDRA API, process it, and import it into MongoDB:
+```
+POST http://localhost:8080/ibge/ipca/fetch
+```
+
+#### - Retrieve the import process status with detailed information:
+```   
+GET http://localhost:8080/ibge/ipca/imports/{jobId}
+```
+
+#### - Retrieve the cumulative inflation rate over a given period:
+```   
+POST http://localhost:8080/ibge/ipca/cumulative-rate
+```
+
+Request body example:
+```json
+{
+    "startYear": 2010,
+    "startMonth": 1,
+    "endYear": 2010,
+    "endMonth": 11
+}
+```

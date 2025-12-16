@@ -17,7 +17,7 @@ public class IpcaCalculationController {
         this.service = service;
     }
 
-    @PostMapping("/taxa-acumulada")
+    @PostMapping("/cumulative-rate")
     public ResponseEntity<CumulativeInflationRateResponse> calcular(@RequestBody CumulativeInflationRateRequest request) {
 
         return ResponseEntity.ok(
