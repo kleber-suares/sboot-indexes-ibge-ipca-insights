@@ -158,7 +158,7 @@ Use the URI below only if you want to inspect or manage the data using an extern
 mongodb://admin:admin@localhost:27017/
 ``` 
 ---
-## 📥 Endpoints of the application (assuming a local execution)
+## 📥 Application endpoints (assuming local execution)
 
 #### - Fetch IPCA data from the SIDRA API, process it, and import it into MongoDB:
 ```
